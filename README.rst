@@ -9,9 +9,9 @@
 
 Welcome to constant2 Documentation
 ==================================
-If you have lots of constant2ant value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability.
+If you have lots of constant2 value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability.
 
-``constant2`` is a library provide extensive way of managing your constant2ant variable.
+``constant2`` is a library provide extensive way of managing your constant2 variable.
 
 Example:
 
