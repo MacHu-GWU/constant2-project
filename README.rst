@@ -1,26 +1,26 @@
-.. image:: https://travis-ci.org/MacHu-GWU/const-project.svg?branch=master
+.. image:: https://travis-ci.org/MacHu-GWU/constant2-project.svg?branch=master
 
-.. image:: https://img.shields.io/pypi/v/const.svg
+.. image:: https://img.shields.io/pypi/v/constant2.svg
 
-.. image:: https://img.shields.io/pypi/l/const.svg
+.. image:: https://img.shields.io/pypi/l/constant2.svg
 
-.. image:: https://img.shields.io/pypi/pyversions/const.svg
+.. image:: https://img.shields.io/pypi/pyversions/constant2.svg
 
 
-Welcome to const Documentation
-==============================
-If you have lots of constant value widely used across your development. A better way is to define ``Constant Variable`` rather than using the raw value. This can improve the readability.
+Welcome to constant2 Documentation
+==================================
+If you have lots of constant2ant value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability.
 
-``const`` is a library provide extensive way of managing your constant variable.
+``constant2`` is a library provide extensive way of managing your constant2ant variable.
 
 Example:
 
 .. code-block:: python
 
-   from const import Const
+   from constant2 import Constant
 
 
-   class Food(Const):
+   class Food(Constant):
 
        class Fruit:
            id = 1
@@ -96,12 +96,12 @@ You can visit it's data or child class data in these way.
 
 **Quick Links**
 ---------------
-- `GitHub Homepage <https://github.com/MacHu-GWU/const-project>`_
-- `Online Documentation <http://pythonhosted.org/const>`_
-- `PyPI download <https://pypi.python.org/pypi/const>`_
+- `GitHub Homepage <https://github.com/MacHu-GWU/constant2-project>`_
+- `Online Documentation <http://pythonhosted.org/constant2>`_
+- `PyPI download <https://pypi.python.org/pypi/constant2>`_
 - `Install <install_>`_
-- `Issue submit and feature request <https://github.com/MacHu-GWU/const-project/issues>`_
-- `API reference and source code <http://pythonhosted.org/const/py-modindex.html>`_
+- `Issue submit and feature request <https://github.com/MacHu-GWU/constant2-project/issues>`_
+- `API reference and source code <http://pythonhosted.org/constant2/py-modindex.html>`_
 
 
 .. _install:
@@ -109,14 +109,14 @@ You can visit it's data or child class data in these way.
 Install
 -------
 
-``const`` is released on PyPI, so all you need is:
+``constant2`` is released on PyPI, so all you need is:
 
 .. code-block:: console
 
-    $ pip install const
+    $ pip install constant2
 
 To upgrade to latest version:
 
 .. code-block:: console
 
-    $ pip install --upgrade const
+    $ pip install --upgrade constant2

@@ -8,7 +8,7 @@ import os
 
 #--- Define project dependent variable ---
 # Your package name
-NAME = "const"
+NAME = "constant2"
 # Your GitHub user name
 GITHUB_USERNAME = "MacHu-GWU" # your GitHub account name
 

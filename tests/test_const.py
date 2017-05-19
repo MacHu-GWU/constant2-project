@@ -7,10 +7,10 @@ Unittest
 
 from __future__ import print_function
 import pytest
-from const import Const
+from constant2 import Constant
 
 
-class Food(Const):
+class Food(Constant):
 
     class Fruit:
         id = 1
@@ -53,7 +53,7 @@ class Food(Const):
             name = "meat"
 
 
-class Item(Const):
+class Item(Constant):
 
     class Weapon:
         id = 1

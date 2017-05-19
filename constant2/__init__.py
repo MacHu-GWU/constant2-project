@@ -14,10 +14,10 @@ try:
     from .pkg.inspect_mate import is_class_method, get_all_attributes
     from .pkg.pytest import approx
 except:
-    from const.pkg.pylru import lrudecorator
-    from const.pkg.sixmini import integer_types, string_types, add_metaclass
-    from const.pkg.inspect_mate import is_class_method, get_all_attributes
-    from const.pkg.pytest import approx
+    from constant2.pkg.pylru import lrudecorator
+    from constant2.pkg.sixmini import integer_types, string_types, add_metaclass
+    from constant2.pkg.inspect_mate import is_class_method, get_all_attributes
+    from constant2.pkg.pytest import approx
 
 
 _reserved_attrs = set([
@@ -25,8 +25,8 @@ _reserved_attrs = set([
 ])
 
 
-class ConstMeta(type):
-    """Meta class for :class:`Const`.
+class Meta(type):
+    """Meta class for :class:`Constant`.
     """
     def __new__(cls, name, bases, attrs):
         for attr, value in attrs.items():
@@ -40,20 +40,20 @@ class ConstMeta(type):
             # ``class MyClass:`` or ``class MyClass(object):``
             if inspect.isclass(value):
                 if isinstance(value, (type, object)):
-                    kls = type(value.__name__, (Const,), value.__dict__.copy())
+                    kls = type(value.__name__, (Constant,), value.__dict__.copy())
                     attrs[attr] = kls
 
-        klass = super(ConstMeta, cls).__new__(cls, name, bases, attrs)
+        klass = super(Meta, cls).__new__(cls, name, bases, attrs)
         return klass
 
 
-@add_metaclass(ConstMeta)
-class Const(object):
-    """Generic Constant.
+@add_metaclass(Meta)
+class Constant(object):
+    """Generic Constantant.
 
     Inherit from this class to define a data container class.
 
-    all nested Const class automatically inherit from :class:`Const`. 
+    all nested Constant class automatically inherit from :class:`Constant`. 
     """
     @classmethod
     def items(cls):
@@ -62,7 +62,7 @@ class Const(object):
         l = list()
         for attr, value in get_all_attributes(cls):
             try:
-                if not issubclass(value, Const):
+                if not issubclass(value, Constant):
                     l.append((attr, value))
             except:
                 l.append((attr, value))
@@ -88,12 +88,12 @@ class Const(object):
 
     @classmethod
     def nested(cls, sort_by=None, reverse=False):
-        """Get all nested Const class, in alphabetical order.
+        """Get all nested Constant class, in alphabetical order.
         """
         l = list()
         for attr, value in get_all_attributes(cls):
             try:
-                if issubclass(value, Const):
+                if issubclass(value, Constant):
                     l.append(value)
             except:
                 pass
@@ -105,7 +105,7 @@ class Const(object):
     @classmethod
     @lrudecorator(size=32)
     def get_first(cls, attr, value, e=0.000001, sort_by="__name__"):
-        """Get the first nested Constant class that met ``klass.attr == value``.
+        """Get the first nested Constantant class that met ``klass.attr == value``.
 
         :param attr: attribute name.
         :param value: value.
@@ -124,7 +124,7 @@ class Const(object):
     @classmethod
     @lrudecorator(size=32)
     def get_all(cls, attr, value, e=0.000001, sort_by="__name__"):
-        """Get all nested Constant class that met ``klass.attr == value``.
+        """Get all nested Constantant class that met ``klass.attr == value``.
 
         :param attr: attribute name.
         :param value: value.
@@ -143,7 +143,7 @@ class Const(object):
 
 
 if __name__ == "__main__":
-    class Food(Const):
+    class Food(Constant):
 
         class Fruit:
             id = 1
