@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 try:
     from ._constant2 import Constant
-except Exception as e:
-    print(e)
+except:
+    pass
 
 __version__ = "0.0.2"
 __short_description__ = "provide extensive way of managing your constant variable."
