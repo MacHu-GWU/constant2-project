@@ -17,50 +17,50 @@ Example:
 
 .. code-block:: python
 
-   from constant2 import Constant
+    from constant2 import Constant
 
 
-   class Food(Constant):
+    class Food(Constant):
 
-       class Fruit:
-           id = 1
-           name = "fruit"
+        class Fruit:
+            id = 1
+            name = "fruit"
 
-           class Apple:
-               id = 1
-               name = "apple"
+            class Apple:
+                id = 1
+                name = "apple"
 
-               class RedApple:
-                   id = 1
-                   name = "red apple"
+                class RedApple:
+                    id = 1
+                    name = "red apple"
 
-               class GreenApple:
-                   id = 2
-                   name = "green apple"
+                class GreenApple:
+                    id = 2
+                    name = "green apple"
 
-           class Banana:
-               id = 2
-               name = "banana"
+            class Banana:
+                id = 2
+                name = "banana"
 
-               class YellowBanana:
-                   id = 1
-                   name = "yellow banana"
+                class YellowBanana:
+                    id = 1
+                    name = "yellow banana"
 
-               class GreenBanana:
-                   id = 2
-                   name = "green banana"
+                class GreenBanana:
+                    id = 2
+                    name = "green banana"
 
-       class Meat:
-           id = 2
-           name = "meat"
+        class Meat:
+            id = 2
+            name = "meat"
 
-           class Pork:
-               id = 1
-               name = "pork"
+            class Pork:
+                id = 1
+                name = "pork"
 
-           class Meat:
-               id = 2
-               name = "meat"
+            class Beef:
+                id = 2
+                name = "beef"
 
 
 You can visit it's data or child class data in these way.
@@ -91,7 +91,11 @@ You can visit it's data or child class data in these way.
 
     # get all child class that kls.id == 1
     >>> Fruit.get_all('id', 1)
-    [class Apple, ]    
+    [class Apple, ]
+
+And it provides built-in I/O methods allow you to dump these data in general ways.
+
+
 
 
 **Quick Links**

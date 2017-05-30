@@ -1,27 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__version__ = "0.0.1"
+from __future__ import print_function
+
+__version__ = "0.0.2"
 __short_description__ = "provide extensive way of managing your constant variable."
 __license__ = "MIT"
 __author__ = "Sanhe Hu"
 
 
 import inspect
+from pprint import pprint
+from collections import OrderedDict
 try:
     from .pkg.pylru import lrudecorator
     from .pkg.sixmini import integer_types, string_types, add_metaclass
     from .pkg.inspect_mate import is_class_method, get_all_attributes
     from .pkg.pytest import approx
+    from .pkg.superjson import json
 except:
     from constant2.pkg.pylru import lrudecorator
     from constant2.pkg.sixmini import integer_types, string_types, add_metaclass
     from constant2.pkg.inspect_mate import is_class_method, get_all_attributes
     from constant2.pkg.pytest import approx
+    from constant2.pkg.superjson import json
 
+try:
+    from superjson import json
+    del json._dumpers["collections.OrderedDict"]
+except:
+    pass
 
 _reserved_attrs = set([
     "items", "keys", "values", "nested", "get_first", "get_all",
+    "dump", "load", "pprint", "jprint",
 ])
 
 
@@ -40,7 +52,8 @@ class Meta(type):
             # ``class MyClass:`` or ``class MyClass(object):``
             if inspect.isclass(value):
                 if isinstance(value, (type, object)):
-                    kls = type(value.__name__, (Constant,), value.__dict__.copy())
+                    kls = type(
+                        value.__name__, (Constant,), value.__dict__.copy())
                     attrs[attr] = kls
 
         klass = super(Meta, cls).__new__(cls, name, bases, attrs)
@@ -141,48 +154,102 @@ class Constant(object):
 
         return matched
 
+    @classmethod
+    def dump(cls):
+        """Dump data into a dict.
+        
+        .. versionadded:: 0.0.2
+        """
+        d = OrderedDict(cls.items())
+        d["__classname__"] = cls.__name__
+        for klass in cls.nested():
+            d.update(klass.dump())
+        return OrderedDict([(cls.__name__, d)])
+
+    @classmethod
+    def load(cls, data):
+        """Construct a Constant class from it's dict data.
+        
+        .. versionadded:: 0.0.2
+        """
+        if len(data) == 1:
+            for key, value in data.items():
+                if "__classname__" not in value:
+                    raise ValueError
+                name = key
+                bases = (Constant, )
+                attrs = dict()
+                for k, v in value.items():
+                    if isinstance(v, dict):
+                        if "__classname__" in v:
+                            attrs[k] = cls.load({k: v})
+                        else:
+                            attrs[k] = v
+                    else:
+                        attrs[k] = v
+            return type(name, bases, attrs)
+        else:
+            raise ValueError
+
+    @classmethod
+    def pprint(cls):
+        """Pretty print it's data.
+        
+        .. versionadded:: 0.0.2
+        """
+        pprint(cls.dump())
+
+    @classmethod
+    def jprint(cls):
+        """Json print it's data.
+        
+        .. versionadded:: 0.0.2
+        """
+        print(json.dumps(cls.dump(), pretty=True))
+
 
 if __name__ == "__main__":
+
     class Food(Constant):
 
         class Fruit:
             id = 1
             name = "fruit"
 
-    # print(Food.items())
+            class Apple:
+                id = 1
+                name = "apple"
 
-#             class Apple:
-#                 id = 1
-#                 name = "apple"
-#
-#                 class RedApple:
-#                     id = 1
-#                     name = "red apple"
-#
-#                 class GreenApple:
-#                     id = 2
-#                     name = "green apple"
-#
-#             class Banana:
-#                 id = 2
-#                 name = "banana"
-#
-#                 class YellowBanana:
-#                     id = 1
-#                     name = "yellow banana"
-#
-#                 class GreenBanana:
-#                     id = 2
-#                     name = "green banana"
-#
-#         class Meat:
-#             id = 2
-#             name = "meat"
-#
-#             class Pork:
-#                 id = 1
-#                 name = "pork"
-#
-#             class Meat:
-#                 id = 2
-#                 name = "meat"
+                class RedApple:
+                    id = 1
+                    name = "red apple"
+
+                class GreenApple:
+                    id = 2
+                    name = "green apple"
+
+            class Banana:
+                id = 2
+                name = "banana"
+
+                class YellowBanana:
+                    id = 1
+                    name = "yellow banana"
+
+                class GreenBanana:
+                    id = 2
+                    name = "green banana"
+
+        class Meat:
+            id = 2
+            name = "meat"
+
+            class Pork:
+                id = 1
+                name = "pork"
+
+            class Beef:
+                id = 2
+                name = "beef"
+
+    Food.jprint()

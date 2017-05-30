@@ -48,9 +48,9 @@ class Food(Constant):
             id = 1
             name = "pork"
 
-        class Meat:
+        class Beef:
             id = 2
-            name = "meat"
+            name = "beef"
 
 
 class Item(Constant):
@@ -107,6 +107,13 @@ def test_get_first_performance():
 def test_get_all():
     assert Item.get_all("weight", 10, sort_by="id") == [
         Item.Weapon, Item.Armor]
+
+
+def test_dump_load():
+    data = Food.dump()
+    Food1 = Constant.load(data)
+    data1 = Food1.dump()
+    assert data == data1
 
 
 if __name__ == "__main__":
