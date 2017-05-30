@@ -6,7 +6,6 @@ __short_description__ = "Extendable json encode/decode library."
 __license__ = "MIT"
 
 try:
-    from ._superjson import SuperJson, get_class_name
-    from ._superjson import superjson as json 
+    from ._superjson import SuperJson, get_class_name, superjson as json
 except Exception as e:
     pass
