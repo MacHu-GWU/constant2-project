@@ -74,7 +74,7 @@ Example
                 name = "beef"
 
 
-You can visit it's data or child class data in these way.
+You can visit it's data or child class data in these way:
 
 .. code-block:: python
 
