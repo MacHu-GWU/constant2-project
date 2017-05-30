@@ -13,12 +13,23 @@ If you have lots of constant2 value widely used across your development. A bette
 
 ``constant2`` is a library provide extensive way of managing your constant2 variable.
 
-Example:
+
+**Quick Links**
+---------------
+- `GitHub Homepage <https://github.com/MacHu-GWU/constant2-project>`_
+- `Online Documentation <http://pythonhosted.org/constant2>`_
+- `PyPI download <https://pypi.python.org/pypi/constant2>`_
+- `Install <install_>`_
+- `Issue submit and feature request <https://github.com/MacHu-GWU/constant2-project/issues>`_
+- `API reference and source code <http://pythonhosted.org/constant2/py-modindex.html>`_
+
+
+Example
+-------
 
 .. code-block:: python
 
     from constant2 import Constant
-
 
     class Food(Constant):
 
@@ -65,7 +76,6 @@ Example:
 
 You can visit it's data or child class data in these way.
 
-
 .. code-block:: python
 
     >>> Fruit.items() # .items() return it's    data
@@ -93,19 +103,69 @@ You can visit it's data or child class data in these way.
     >>> Fruit.get_all('id', 1)
     [class Apple, ]
 
-And it provides built-in I/O methods allow you to dump these data in general ways.
+And it provides built-in I/O methods allow you to dump these data in to a dictionary.
 
+.. code-block:: python
 
+    >>> data = Food.dump()
+    >>> data
+    {
+        "Food": {
+            "Fruit": {
+                "Apple": {
+                    "GreenApple": {
+                        "__classname__": "GreenApple",
+                        "id": 2,
+                        "name": "green apple"
+                    },
+                    "RedApple": {
+                        "__classname__": "RedApple",
+                        "id": 1,
+                        "name": "red apple"
+                    },
+                    "__classname__": "Apple",
+                    "id": 1,
+                    "name": "apple"
+                },
+                "Banana": {
+                    "GreenBanana": {
+                        "__classname__": "GreenBanana",
+                        "id": 2,
+                        "name": "green banana"
+                    },
+                    "YellowBanana": {
+                        "__classname__": "YellowBanana",
+                        "id": 1,
+                        "name": "yellow banana"
+                    },
+                    "__classname__": "Banana",
+                    "id": 2,
+                    "name": "banana"
+                },
+                "__classname__": "Fruit",
+                "id": 1,
+                "name": "fruit"
+            },
+            "Meat": {
+                "Beef": {
+                    "__classname__": "Beef",
+                    "id": 2,
+                    "name": "beef"
+                },
+                "Pork": {
+                    "__classname__": "Pork",
+                    "id": 1,
+                    "name": "pork"
+                },
+                "__classname__": "Meat",
+                "id": 2,
+                "name": "meat"
+            },
+            "__classname__": "Food"
+        }
+    }
 
-
-**Quick Links**
----------------
-- `GitHub Homepage <https://github.com/MacHu-GWU/constant2-project>`_
-- `Online Documentation <http://pythonhosted.org/constant2>`_
-- `PyPI download <https://pypi.python.org/pypi/constant2>`_
-- `Install <install_>`_
-- `Issue submit and feature request <https://github.com/MacHu-GWU/constant2-project/issues>`_
-- `API reference and source code <http://pythonhosted.org/constant2/py-modindex.html>`_
+    >>> Food = Constant.load(data)
 
 
 .. _install:

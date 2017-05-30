@@ -25,11 +25,7 @@ except:
     from constant2.pkg.pytest import approx
     from constant2.pkg.superjson import json
 
-try:
-    from superjson import json
-    del json._dumpers["collections.OrderedDict"]
-except:
-    pass
+del json._dumpers["collections.OrderedDict"]
 
 _reserved_attrs = set([
     "items", "keys", "values", "nested", "get_first", "get_all",
@@ -251,5 +247,5 @@ if __name__ == "__main__":
             class Beef:
                 id = 2
                 name = "beef"
-
+                
     Food.jprint()
