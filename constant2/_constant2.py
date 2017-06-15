@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import inspect
+from copy import deepcopy
 from pprint import pprint
 from collections import OrderedDict
 try:
@@ -17,14 +18,14 @@ except:
     from constant2.pkg.inspect_mate import is_class_method, get_all_attributes
     from constant2.pkg.pytest import approx
     from constant2.pkg.superjson import json
-    
+
 try:
     del json._dumpers["collections.OrderedDict"]
 except KeyError:
     pass
 
 _reserved_attrs = set([
-    "items", "keys", "values", "nested", "get_first", "get_all",
+    "items", "keys", "values", "subclasses", "nested", "get_first", "get_all",
     "dump", "load", "pprint", "jprint",
 ])
 
@@ -43,6 +44,8 @@ class Meta(type):
             # nested class has to inherit from type or object
             # ``class MyClass:`` or ``class MyClass(object):``
             if inspect.isclass(value):
+                # If it's inherit from type (in PY3) or object (in PY2)
+                # inherit from Constant instead
                 if isinstance(value, (type, object)):
                     kls = type(
                         value.__name__, (Constant,), value.__dict__.copy())
@@ -60,6 +63,36 @@ class Constant(object):
 
     all nested Constant class automatically inherit from :class:`Constant`. 
     """
+
+    def __init__(self):
+        """
+
+        .. versionadded:: 0.0.3
+        """
+        for attr, value in self.items():
+            value = deepcopy(value)
+            setattr(self, attr, value)
+
+        for attr, subclass in self.subclasses():
+            value = subclass()
+            setattr(self, attr, value)
+
+    def __repr__(self):
+        items_str = ", ".join(["%s=%r" % (attr, value)
+                               for attr, value in self.items()])
+        nested_str = ", ".join(
+            ["%s=%r" % (subclass.__name__, subclass()) for subclass in self.nested()])
+
+        l = list()
+        if items_str:
+            l.append(items_str)
+
+        if nested_str:
+            l.append(nested_str)
+
+        return "{classname}({args})".format(
+            classname=self.__class__.__name__, args=", ".join(l))
+
     @classmethod
     def items(cls):
         """non-class attributes ordered by alphabetical order.
@@ -92,8 +125,32 @@ class Constant(object):
         return dict(cls.items())
 
     @classmethod
+    def subclasses(cls, sort_by=None, reverse=False):
+        """Get all nested Constant class and it's name pair.
+
+        :param sort_by:
+        :param reverse:
+
+        .. versionadded:: 0.0.3
+        """
+        l = list()
+        for attr, value in get_all_attributes(cls):
+            try:
+                if issubclass(value, Constant):
+                    l.append((attr, value))
+            except:
+                pass
+        if sort_by is not None:
+            l = list(
+                sorted(l, key=lambda x: getattr(x[1], sort_by), reverse=reverse))
+        return l
+
+    @classmethod
     def nested(cls, sort_by=None, reverse=False):
         """Get all nested Constant class, in alphabetical order.
+
+        :param sort_by:
+        :param reverse:
         """
         l = list()
         for attr, value in get_all_attributes(cls):
@@ -149,7 +206,7 @@ class Constant(object):
     @classmethod
     def dump(cls):
         """Dump data into a dict.
-        
+
         .. versionadded:: 0.0.2
         """
         d = OrderedDict(cls.items())
@@ -161,7 +218,7 @@ class Constant(object):
     @classmethod
     def load(cls, data):
         """Construct a Constant class from it's dict data.
-        
+
         .. versionadded:: 0.0.2
         """
         if len(data) == 1:
@@ -186,7 +243,7 @@ class Constant(object):
     @classmethod
     def pprint(cls):
         """Pretty print it's data.
-        
+
         .. versionadded:: 0.0.2
         """
         pprint(cls.dump())
@@ -194,7 +251,7 @@ class Constant(object):
     @classmethod
     def jprint(cls):
         """Json print it's data.
-        
+
         .. versionadded:: 0.0.2
         """
         print(json.dumps(cls.dump(), pretty=True))
@@ -243,5 +300,19 @@ if __name__ == "__main__":
             class Beef:
                 id = 2
                 name = "beef"
-                
+
     Food.jprint()
+
+    class Config(Constant):
+        data = dict(a=1)
+
+        class Setting:
+            data = dict(a=1)
+
+    config1 = Config()
+    config1.data["a"] = 2
+    config1.Setting.data["a"] = 2
+
+    config2 = Config()
+    assert config2.data["a"] == 1
+    assert config2.Setting.data["a"] == 1

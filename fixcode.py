@@ -8,3 +8,6 @@ p = Path(
     Path(__file__).parent.basename.replace("-project", ""),
 )
 p.autopep8()
+
+p = Path("tests")
+p.autopep8()

@@ -116,6 +116,23 @@ def test_dump_load():
     assert data == data1
 
 
+class Config(Constant):
+    data = dict(a=1)
+
+    class Setting:
+        data = dict(a=1)
+
+
+def test_instance():
+    config1 = Config()
+    config1.data["a"] = 2
+    config1.Setting.data["a"] = 2
+
+    config2 = Config()
+    assert config2.data["a"] == 1
+    assert config2.Setting.data["a"] == 1
+
+
 if __name__ == "__main__":
     import os
     pytest.main([os.path.basename(__file__), "--tb=native", "-s", ])
