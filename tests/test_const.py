@@ -8,6 +8,7 @@ Unittest
 from __future__ import print_function
 import pytest
 from constant2 import Constant
+from constant2._constant2 import is_same_dict
 
 
 class Food(Constant):
@@ -113,7 +114,7 @@ def test_dump_load():
     data = Food.dump()
     Food1 = Constant.load(data)
     data1 = Food1.dump()
-    assert data == data1
+    is_same_dict(data, data1)
 
 
 class Config(Constant):
@@ -123,7 +124,7 @@ class Config(Constant):
         data = dict(a=1)
 
 
-def test_instance():
+def test_instance_deepcopy():
     config1 = Config()
     config1.data["a"] = 2
     config1.Setting.data["a"] = 2
@@ -131,6 +132,46 @@ def test_instance():
     config2 = Config()
     assert config2.data["a"] == 1
     assert config2.Setting.data["a"] == 1
+
+
+class User:
+    id = None
+    name = None
+
+
+class AddressBook(Constant):
+    alice = User
+    bob = User
+
+
+def test_different_attr_same_value():
+    data = AddressBook.dump()
+    data1 = {
+        "AddressBook": {
+            "__classname__": "AddressBook",
+            "alice": {
+                "User": {
+                    "__classname__": "User",
+                    "id": None,
+                    "name": None,
+                }
+            },
+            "bob": {
+                "User": {
+                    "__classname__": "User",
+                    "id": None,
+                    "name": None,
+                }
+            }
+        }
+    }
+    is_same_dict(data, data1)
+
+    ab = AddressBook()
+
+    s = str(ab)
+    assert "alice" in s
+    assert "bob" in s
 
 
 if __name__ == "__main__":

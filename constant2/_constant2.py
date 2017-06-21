@@ -63,6 +63,7 @@ class Constant(object):
 
     all nested Constant class automatically inherit from :class:`Constant`. 
     """
+    __creation_index__ = 0  # Used for sorting
 
     def __init__(self):
         """
@@ -77,11 +78,14 @@ class Constant(object):
             value = subclass()
             setattr(self, attr, value)
 
+        self.__creation_index__ = Constant.__creation_index__
+        Constant.__creation_index__ += 1
+
     def __repr__(self):
         items_str = ", ".join(["%s=%r" % (attr, value)
                                for attr, value in self.items()])
         nested_str = ", ".join(
-            ["%s=%r" % (subclass.__name__, subclass()) for subclass in self.nested()])
+            ["%s=%r" % (attr, subclass()) for attr, subclass in self.subclasses()])
 
         l = list()
         if items_str:
@@ -140,9 +144,13 @@ class Constant(object):
                     l.append((attr, value))
             except:
                 pass
-        if sort_by is not None:
-            l = list(
-                sorted(l, key=lambda x: getattr(x[1], sort_by), reverse=reverse))
+
+        if sort_by is None:
+            sort_by = "__creation_index__"
+
+        l = list(
+            sorted(l, key=lambda x: getattr(x[1], sort_by), reverse=reverse))
+
         return l
 
     @classmethod
@@ -159,9 +167,12 @@ class Constant(object):
                     l.append(value)
             except:
                 pass
-        if sort_by is not None:
-            l = list(
-                sorted(l, key=lambda x: getattr(x, sort_by), reverse=reverse))
+
+        if sort_by is None:
+            sort_by = "__creation_index__"
+
+        l = list(
+            sorted(l, key=lambda x: getattr(x, sort_by), reverse=reverse))
         return l
 
     @classmethod
@@ -211,8 +222,8 @@ class Constant(object):
         """
         d = OrderedDict(cls.items())
         d["__classname__"] = cls.__name__
-        for klass in cls.nested():
-            d.update(klass.dump())
+        for attr, klass in cls.subclasses():
+            d[attr] = klass.dump()
         return OrderedDict([(cls.__name__, d)])
 
     @classmethod
@@ -254,7 +265,17 @@ class Constant(object):
 
         .. versionadded:: 0.0.2
         """
-        print(json.dumps(cls.dump(), pretty=True))
+        print(json.dumps(cls.dump(), pretty=4))
+
+
+def is_same_dict(d1, d2):
+    """Test two dictionary is equal on values. (ignore order)
+    """
+    for k, v in d1.items():
+        if isinstance(v, dict):
+            is_same_dict(v, d2[k])
+        else:
+            assert d1[k] == d2[k]
 
 
 if __name__ == "__main__":
@@ -302,17 +323,3 @@ if __name__ == "__main__":
                 name = "beef"
 
     Food.jprint()
-
-    class Config(Constant):
-        data = dict(a=1)
-
-        class Setting:
-            data = dict(a=1)
-
-    config1 = Config()
-    config1.data["a"] = 2
-    config1.Setting.data["a"] = 2
-
-    config2 = Config()
-    assert config2.data["a"] == 1
-    assert config2.Setting.data["a"] == 1
