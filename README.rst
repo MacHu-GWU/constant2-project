@@ -73,34 +73,49 @@ Example
                 id = 2
                 name = "beef"
 
+    food = Food()
 
 You can visit it's data or child class data in these way:
 
 .. code-block:: python
 
-    >>> Fruit.items() # .items() return it's    data
+    # Use class
+    >>> Fruit.Items() # .Items() return it's data
     [('id', 1), ('name', 'fruit')]
 
-    >>> Fruit.keys() # .keys() return keys
+    >>> Fruit.Keys() # .Keys() return keys
     ['id', 'name']
 
-    >>> Fruit.values() # .values() return values
+    >>> Fruit.Values() # .Values() return values
     [1, 'fruit']
 
-    >>> Fruit.to_dict() # return data in a dict
+    >>> Fruit.ToDict() # return data in a dict
+    {'id': 1, 'name': 'fruit'}
+
+    # use instance
+    >>> food.items() # .Items() return it's data
+    [('id', 1), ('name', 'fruit')]
+
+    >>> food.keys() # .keys() return keys
+    ['id', 'name']
+
+    >>> food.values() # .values() return values
+    [1, 'fruit']
+
+    >>> food.to_dict() # return data in a dict
     {'id': 1, 'name': 'fruit'}
 
     # iterate on all nested class
-    >>> Fruit.nested(sort_by='id')
+    >>> Fruit.Subclasses(sort_by='id')
     [class Apple, class Banana]
 
     # get first nested class that kls.id == 1
     # useful when you need reverse lookup
-    >>> Fruit.get_first('id', 1)
+    >>> Fruit.GetFirst('id', 1)
     class Apple
 
     # get all child class that kls.id == 1
-    >>> Fruit.get_all('id', 1)
+    >>> Fruit.GetAll('id', 1)
     [class Apple, ]
 
 And it provides built-in I/O methods allow you to dump these data in to a dictionary.

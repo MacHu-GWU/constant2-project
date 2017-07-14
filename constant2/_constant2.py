@@ -9,13 +9,17 @@ from collections import OrderedDict
 try:
     from .pkg.pylru import lrudecorator
     from .pkg.sixmini import integer_types, string_types, add_metaclass
-    from .pkg.inspect_mate import is_class_method, get_all_attributes
+    from .pkg.inspect_mate import (
+        is_class_method, is_regular_method, get_all_attributes,
+    )
     from .pkg.pytest import approx
     from .pkg.superjson import json
 except:
     from constant2.pkg.pylru import lrudecorator
     from constant2.pkg.sixmini import integer_types, string_types, add_metaclass
-    from constant2.pkg.inspect_mate import is_class_method, get_all_attributes
+    from constant2.pkg.inspect_mate import (
+        is_class_method, is_regular_method, get_all_attributes,
+    )
     from constant2.pkg.pytest import approx
     from constant2.pkg.superjson import json
 
@@ -25,7 +29,12 @@ except KeyError:
     pass
 
 _reserved_attrs = set([
-    "items", "keys", "values", "subclasses", "nested", "get_first", "get_all",
+    "Items", "Keys", "Values",
+    "items", "keys", "values",
+    "ToDict", "to_dict",
+    "Subclasses", "subclasses",
+    "GetFirst", "get_first",
+    "GetAll", "get_all",
     "dump", "load", "pprint", "jprint",
 ])
 
@@ -35,12 +44,6 @@ class Meta(type):
     """
     def __new__(cls, name, bases, attrs):
         for attr, value in attrs.items():
-            # Make sure reserved attributes are not been override
-            if attr in _reserved_attrs:
-                if not isinstance(value, classmethod):
-                    raise AttributeError(
-                        "%r is not a valid attribute name" % attr)
-
             # nested class has to inherit from type or object
             # ``class MyClass:`` or ``class MyClass(object):``
             if inspect.isclass(value):
@@ -52,6 +55,13 @@ class Meta(type):
                     attrs[attr] = kls
 
         klass = super(Meta, cls).__new__(cls, name, bases, attrs)
+        for attr in attrs:
+            # Make sure reserved attributes are not been override
+            if attr in _reserved_attrs:
+                if not (is_class_method(klass, attr) or is_regular_method(klass, attr)):
+                    raise AttributeError(
+                        "%r is not a valid attribute name" % attr)
+
         return klass
 
 
@@ -70,12 +80,12 @@ class Constant(object):
 
         .. versionadded:: 0.0.3
         """
-        for attr, value in self.items():
+        for attr, value in self.__class__.Items():
             value = deepcopy(value)
             setattr(self, attr, value)
 
-        for attr, subclass in self.subclasses():
-            value = subclass()
+        for attr, Subclass in self.Subclasses():
+            value = Subclass()
             setattr(self, attr, value)
 
         self.__creation_index__ = Constant.__creation_index__
@@ -85,7 +95,7 @@ class Constant(object):
         items_str = ", ".join(["%s=%r" % (attr, value)
                                for attr, value in self.items()])
         nested_str = ", ".join(
-            ["%s=%r" % (attr, subclass()) for attr, subclass in self.subclasses()])
+            ["%s=%r" % (attr, subclass) for attr, subclass in self.subclasses()])
 
         l = list()
         if items_str:
@@ -98,7 +108,7 @@ class Constant(object):
             classname=self.__class__.__name__, args=", ".join(l))
 
     @classmethod
-    def items(cls):
+    def Items(cls):
         """non-class attributes ordered by alphabetical order.
         """
         l = list()
@@ -110,30 +120,62 @@ class Constant(object):
                 l.append((attr, value))
         return l
 
+    def items(self):
+        """non-class attributes ordered by alphabetical order.
+        """
+        l = list()
+        for attr, _ in get_all_attributes(self.__class__):
+            value = getattr(self, attr)
+            try:
+                if not issubclass(value, Constant):
+                    l.append((attr, value))
+            except:
+                l.append((attr, value))
+        return l
+
+    def __eq__(self, other):
+        return self.items() == other.items()
+
     @classmethod
-    def keys(cls):
+    def Keys(cls):
         """All non-class attribute name list. 
         """
         return [attr for attr, _ in cls.items()]
 
+    def keys(self):
+        """All non-class attribute name list. 
+        """
+        return [attr for attr, _ in self.items()]
+
     @classmethod
-    def values(cls):
+    def Values(cls):
         """All non-class attribute value list.
         """
         return [value for _, value in cls.items()]
 
+    def values(self):
+        """All non-class attribute value list.
+        """
+        return [value for _, value in self.items()]
+
     @classmethod
-    def to_dict(cls):
+    def ToDict(cls):
         """Return regular class variable and it's value as a dictionary data.
         """
         return dict(cls.items())
 
+    def to_dict(self):
+        """Return regular class variable and it's value as a dictionary data.
+        """
+        return dict(self.items())
+
     @classmethod
-    def subclasses(cls, sort_by=None, reverse=False):
+    def Subclasses(cls, sort_by=None, reverse=False):
         """Get all nested Constant class and it's name pair.
 
-        :param sort_by:
-        :param reverse:
+        :param sort_by: the attribute name used for sorting.
+        :param reverse: if True, return in descend order.
+        :returns: [(attr, value),...] pairs.
 
         .. versionadded:: 0.0.3
         """
@@ -153,39 +195,32 @@ class Constant(object):
 
         return l
 
-    @classmethod
-    def nested(cls, sort_by=None, reverse=False):
-        """Get all nested Constant class, in alphabetical order.
+    def subclasses(self, sort_by=None, reverse=False):
+        """Get all nested Constant class instance and it's name pair.
 
-        :param sort_by:
-        :param reverse:
+        :param sort_by: the attribute name used for sorting.
+        :param reverse: if True, return in descend order.
+        :returns: [(attr, value),...] pairs.
+
+        .. versionadded:: 0.0.4
         """
         l = list()
-        for attr, value in get_all_attributes(cls):
-            try:
-                if issubclass(value, Constant):
-                    l.append(value)
-            except:
-                pass
-
-        if sort_by is None:
-            sort_by = "__creation_index__"
-
-        l = list(
-            sorted(l, key=lambda x: getattr(x, sort_by), reverse=reverse))
+        for attr, _ in self.Subclasses(sort_by, reverse):
+            value = getattr(self, attr)
+            l.append((attr, value))
         return l
 
     @classmethod
     @lrudecorator(size=32)
-    def get_first(cls, attr, value, e=0.000001, sort_by="__name__"):
-        """Get the first nested Constantant class that met ``klass.attr == value``.
+    def GetFirst(cls, attr, value, e=0.000001, sort_by="__name__"):
+        """Get the first nested Constant class that met ``klass.attr == value``.
 
         :param attr: attribute name.
         :param value: value.
         :param e: used for float value comparison.
         :param sort_by: nested class is ordered by <sort_by> attribute.
         """
-        for klass in cls.nested(sort_by=sort_by):
+        for _, klass in cls.Subclasses(sort_by=sort_by):
             try:
                 if klass.__dict__[attr] == approx(value, e):
                     return klass
@@ -194,10 +229,28 @@ class Constant(object):
 
         return None
 
+    def get_first(self, attr, value, e=0.000001,
+                  sort_by="__name__", reverse=False):
+        """Get the first nested Constant class that met ``klass.attr == value``.
+
+        :param attr: attribute name.
+        :param value: value.
+        :param e: used for float value comparison.
+        :param sort_by: nested class is ordered by <sort_by> attribute.
+        """
+        for _, klass in self.subclasses(sort_by, reverse):
+            try:
+                if getattr(klass, attr) == approx(value, e):
+                    return klass
+            except:
+                pass
+
+        return None
+
     @classmethod
     @lrudecorator(size=32)
-    def get_all(cls, attr, value, e=0.000001, sort_by="__name__"):
-        """Get all nested Constantant class that met ``klass.attr == value``.
+    def GetAll(cls, attr, value, e=0.000001, sort_by="__name__"):
+        """Get all nested Constant class that met ``klass.attr == value``.
 
         :param attr: attribute name.
         :param value: value.
@@ -205,9 +258,28 @@ class Constant(object):
         :param sort_by: nested class is ordered by <sort_by> attribute.
         """
         matched = list()
-        for klass in cls.nested(sort_by=sort_by):
+        for _, klass in cls.Subclasses(sort_by=sort_by):
             try:
                 if klass.__dict__[attr] == approx(value, e):
+                    matched.append(klass)
+            except:
+                pass
+
+        return matched
+
+    def get_all(self, attr, value, e=0.000001,
+                sort_by="__name__", reverse=False):
+        """Get all nested Constant class that met ``klass.attr == value``.
+
+        :param attr: attribute name.
+        :param value: value.
+        :param e: used for float value comparison.
+        :param sort_by: nested class is ordered by <sort_by> attribute.
+        """
+        matched = list()
+        for _, klass in self.subclasses(sort_by, reverse):
+            try:
+                if getattr(klass, attr) == approx(value, e):
                     matched.append(klass)
             except:
                 pass
@@ -220,9 +292,9 @@ class Constant(object):
 
         .. versionadded:: 0.0.2
         """
-        d = OrderedDict(cls.items())
+        d = OrderedDict(cls.Items())
         d["__classname__"] = cls.__name__
-        for attr, klass in cls.subclasses():
+        for attr, klass in cls.Subclasses():
             d[attr] = klass.dump()
         return OrderedDict([(cls.__name__, d)])
 
@@ -277,6 +349,12 @@ def is_same_dict(d1, d2):
         else:
             assert d1[k] == d2[k]
 
+    for k, v in d2.items():
+        if isinstance(v, dict):
+            is_same_dict(v, d1[k])
+        else:
+            assert d1[k] == d2[k]
+
 
 if __name__ == "__main__":
 
@@ -322,4 +400,12 @@ if __name__ == "__main__":
                 id = 2
                 name = "beef"
 
-    Food.jprint()
+    food = Food()
+#     print(food.Fruit == getattr(food, "Fruit"))
+
+#     print(food.Fruit)
+#     print(food.subclasses())
+#     print(food.__dict__)
+#     print(food.Fruit.__dict__)
+#     print(type(food))
+#     print(inspect.isclass(food.Fruit))

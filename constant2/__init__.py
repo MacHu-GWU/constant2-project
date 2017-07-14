@@ -6,7 +6,7 @@ try:
 except:
     pass
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 __short_description__ = "provide extensive way of managing your constant variable."
 __license__ = "MIT"
 __author__ = "Sanhe Hu"
