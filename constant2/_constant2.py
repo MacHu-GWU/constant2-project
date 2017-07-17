@@ -110,27 +110,47 @@ class Constant(object):
     @classmethod
     def Items(cls):
         """non-class attributes ordered by alphabetical order.
+
+        ::
+
+            class MyClass(Constant):
+                a = 1 # non-class attributre
+                b = 2 # non-class attributre
+
+                class C:
+                    pass
+
+                class D:
+                    pass
+
+        .. versionadded:: 0.0.5
         """
         l = list()
         for attr, value in get_all_attributes(cls):
-            try:
-                if not issubclass(value, Constant):
-                    l.append((attr, value))
-            except:
+            # if it's not a class(Constant)
+            if not inspect.isclass(value):
                 l.append((attr, value))
+
         return l
 
     def items(self):
         """non-class attributes ordered by alphabetical order.
+
+        .. versionchanged:: 0.0.5
         """
         l = list()
-        for attr, _ in get_all_attributes(self.__class__):
+        # 为什么这里是 get_all_attributes(self.__class__) 而不是
+        # get_all_attributes(self) ? 因为有些实例不支持
+        # get_all_attributes(instance) 方法, 会报错。
+        # 所以我们从类里得到所有的属性信息, 然后获得这些属性在实例中
+        # 对应的值。
+        for attr, value in get_all_attributes(self.__class__):
             value = getattr(self, attr)
-            try:
-                if not issubclass(value, Constant):
-                    l.append((attr, value))
-            except:
+
+            # if it is not a instance of class(Constant)
+            if not isinstance(value, Constant):
                 l.append((attr, value))
+
         return l
 
     def __eq__(self, other):
@@ -138,34 +158,46 @@ class Constant(object):
 
     @classmethod
     def Keys(cls):
-        """All non-class attribute name list. 
+        """All non-class attribute name list.
+
+        .. versionadded:: 0.0.5
         """
-        return [attr for attr, _ in cls.items()]
+        return [attr for attr, _ in cls.Items()]
 
     def keys(self):
-        """All non-class attribute name list. 
+        """All non-class attribute name list.
+
+        .. versionchanged:: 0.0.5
         """
         return [attr for attr, _ in self.items()]
 
     @classmethod
     def Values(cls):
         """All non-class attribute value list.
+
+        .. versionadded:: 0.0.5
         """
-        return [value for _, value in cls.items()]
+        return [value for _, value in cls.Items()]
 
     def values(self):
         """All non-class attribute value list.
+
+        .. versionchanged:: 0.0.5
         """
         return [value for _, value in self.items()]
 
     @classmethod
     def ToDict(cls):
         """Return regular class variable and it's value as a dictionary data.
+
+        .. versionadded:: 0.0.5
         """
-        return dict(cls.items())
+        return dict(cls.Items())
 
     def to_dict(self):
         """Return regular class variable and it's value as a dictionary data.
+
+        .. versionchanged:: 0.0.5
         """
         return dict(self.items())
 
@@ -219,6 +251,8 @@ class Constant(object):
         :param value: value.
         :param e: used for float value comparison.
         :param sort_by: nested class is ordered by <sort_by> attribute.
+
+        .. versionadded:: 0.0.5
         """
         for _, klass in cls.Subclasses(sort_by=sort_by):
             try:
@@ -237,6 +271,8 @@ class Constant(object):
         :param value: value.
         :param e: used for float value comparison.
         :param sort_by: nested class is ordered by <sort_by> attribute.
+
+        .. versionchanged:: 0.0.5
         """
         for _, klass in self.subclasses(sort_by, reverse):
             try:
@@ -256,6 +292,8 @@ class Constant(object):
         :param value: value.
         :param e: used for float value comparison.
         :param sort_by: nested class is ordered by <sort_by> attribute.
+
+        .. versionadded:: 0.0.5
         """
         matched = list()
         for _, klass in cls.Subclasses(sort_by=sort_by):
@@ -275,6 +313,8 @@ class Constant(object):
         :param value: value.
         :param e: used for float value comparison.
         :param sort_by: nested class is ordered by <sort_by> attribute.
+
+        .. versionchanged:: 0.0.5
         """
         matched = list()
         for _, klass in self.subclasses(sort_by, reverse):
@@ -401,11 +441,3 @@ if __name__ == "__main__":
                 name = "beef"
 
     food = Food()
-#     print(food.Fruit == getattr(food, "Fruit"))
-
-#     print(food.Fruit)
-#     print(food.subclasses())
-#     print(food.__dict__)
-#     print(food.Fruit.__dict__)
-#     print(type(food))
-#     print(inspect.isclass(food.Fruit))
