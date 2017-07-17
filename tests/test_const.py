@@ -68,13 +68,33 @@ class TestFood:
             ("id", 1), ("name", "red apple"),
         ]
 
+        assert Food.Keys() == []
+        assert Food.Fruit.Keys() == ["id", "name"]
+        assert Food.Fruit.Apple.Keys() == ["id", "name"]
+        assert Food.Fruit.Apple.RedApple.Keys() == ["id", "name"]
+
+        assert Food.Values() == []
+        assert Food.Fruit.Values() == [1, "fruit"]
+        assert Food.Fruit.Apple.Values() == [1, "apple"]
+        assert Food.Fruit.Apple.RedApple.Values() == [1, "red apple"]
+
     def test_items(self):
-        assert Food.Items() == []
-        assert Food.Fruit.Items() == [("id", 1), ("name", "fruit")]
-        assert Food.Fruit.Apple.Items() == [("id", 1), ("name", "apple")]
-        assert Food.Fruit.Apple.RedApple.Items() == [
+        assert food.items() == []
+        assert food.Fruit.items() == [("id", 1), ("name", "fruit")]
+        assert food.Fruit.Apple.items() == [("id", 1), ("name", "apple")]
+        assert food.Fruit.Apple.RedApple.items() == [
             ("id", 1), ("name", "red apple"),
         ]
+
+        assert food.keys() == []
+        assert food.Fruit.keys() == ["id", "name"]
+        assert food.Fruit.Apple.keys() == ["id", "name"]
+        assert food.Fruit.Apple.RedApple.keys() == ["id", "name"]
+
+        assert food.values() == []
+        assert food.Fruit.values() == [1, "fruit"]
+        assert food.Fruit.Apple.values() == [1, "apple"]
+        assert food.Fruit.Apple.RedApple.values() == [1, "red apple"]
 
     def test_Subclass(self):
         assert Food.Subclasses() == [
@@ -165,6 +185,12 @@ item = Item()
 
 
 class TestItem:
+    """
+
+    **中文文档**
+
+    测试GetAll的排序功能是否有效。
+    """
 
     def test_GetAll(self):
         assert Item.GetAll("weight", 10, sort_by="name") == [

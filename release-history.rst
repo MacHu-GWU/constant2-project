@@ -1,7 +1,7 @@
 Release and Version History
 ===========================
 
-0.0.6 (TODO)
+0.0.7 (TODO)
 ~~~~~~~~~~~~
 **Features and Improvements**
 
@@ -12,13 +12,22 @@ Release and Version History
 **Miscellaneous**
 
 
-0.0.5 (2017-05-19)
+0.0.6 (2017-07-17)
+~~~~~~~~~~~~~~~~~~
+**Bugfixes**
+- Fixed a bug may cause Constant.Items() and Constant.items() returns weird result.
+
+
+0.0.5 (2017-07-13)
 ~~~~~~~~~~~~~~~~~~
 **Features and Improvements**
 - Now attribute or sub classes could have mutable attributes. Modify one on this instance will not affect other instance.
 - Seperate the methods into two group of API (uppercase for class, lowercase for instance).
 
+**Bugfixes**
+- Fixed a import problem. Now it doesn't require to install any third party packages.
 
-0.0.1 (2016-01-01)
+
+0.0.1 (2017-05-19)
 ~~~~~~~~~~~~~~~~~~
 - First release
