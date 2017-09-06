@@ -1,31 +1,42 @@
 .. image:: https://travis-ci.org/MacHu-GWU/constant2-project.svg?branch=master
+    :target: https://travis-ci.org/MacHu-GWU/constant2-project?branch=master
+
+.. image:: https://coveralls.io/repos/github/MacHu-GWU/constant2-project/badge.svg?branch=master
+    :target: https://coveralls.io/github/MacHu-GWU/constant2-project?branch=master
 
 .. image:: https://img.shields.io/pypi/v/constant2.svg
+    :target: https://pypi.python.org/pypi/constant2
 
 .. image:: https://img.shields.io/pypi/l/constant2.svg
+    :target: https://pypi.python.org/pypi/constant2
 
 .. image:: https://img.shields.io/pypi/pyversions/constant2.svg
+    :target: https://pypi.python.org/pypi/constant2
+
+.. image:: https://img.shields.io/badge/Star_Me_on_GitHub!--None.svg?style=social
+    :target: https://github.com/MacHu-GWU/constant2-project
 
 
-Welcome to constant2 Documentation
-==================================
+Welcome to ``constant2`` Documentation
+==============================================================================
+
 If you have lots of constant2 value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability.
 
 ``constant2`` is a library provide extensive way of managing your constant2 variable.
 
 
-**Quick Links**
----------------
+Quick Links
+-----------
 - `GitHub Homepage <https://github.com/MacHu-GWU/constant2-project>`_
-- `Online Documentation <http://pythonhosted.org/constant2>`_
+- `Online Documentation <http://www.wbh-doc.com.s3.amazonaws.com/constant2/index.html>`_
 - `PyPI download <https://pypi.python.org/pypi/constant2>`_
 - `Install <install_>`_
 - `Issue submit and feature request <https://github.com/MacHu-GWU/constant2-project/issues>`_
-- `API reference and source code <http://pythonhosted.org/constant2/py-modindex.html>`_
+- `API reference and source code <http://www.wbh-doc.com.s3.amazonaws.com/constant2/py-modindex.html>`_
 
 
-Example
--------
+Usage
+-----
 
 .. code-block:: python
 
@@ -192,10 +203,10 @@ Install
 
 .. code-block:: console
 
-    $ pip install constant2
+	$ pip install constant2
 
 To upgrade to latest version:
 
 .. code-block:: console
 
-    $ pip install --upgrade constant2
+	$ pip install --upgrade constant2

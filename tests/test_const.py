@@ -161,6 +161,12 @@ class TestFood:
         elapsed = time.clock() - st
         print("without lfu_cache elapsed %.6f second." % elapsed)
 
+    def test_ToDict(self):
+        d = Food.ToDict()
+
+    def test_to_dot(self):
+        d = food.to_dict()
+
     def test_dump_load(self):
         data = Food.dump()
         Food1 = Constant.load(data)
@@ -213,7 +219,7 @@ class Config(Constant):
 def test_instance_deepcopy():
     """Although, if the attribute of the class is mutable object.
 
-    Edit it's value on one instance will not affect other instance and the 
+    Edit it's value on one instance will not affect other instance and the
     original class.
     """
     config1 = Config()
@@ -267,4 +273,6 @@ def test_different_attr_same_value():
 
 if __name__ == "__main__":
     import os
-    pytest.main([os.path.basename(__file__), "--tb=native", "-s", ])
+
+    basename = os.path.basename(__file__)
+    pytest.main([basename, "-s", "--tb=native"])

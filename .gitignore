@@ -1,3 +1,7 @@
+# User Settings
+constant2.egg-info
+index.rst
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

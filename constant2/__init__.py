@@ -3,10 +3,14 @@
 
 try:
     from ._constant2 import Constant
-except:
+except:  # pragma: no cover
     pass
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 __short_description__ = "provide extensive way of managing your constant variable."
 __license__ = "MIT"
 __author__ = "Sanhe Hu"
+__author_email__ = "husanhe@gmail.com"
+__maintainer__ = "Sanhe Hu"
+__maintainer_email__ = "husanhe@gmail.com"
+__github_username__ = "MacHu-GWU"

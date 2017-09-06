@@ -14,7 +14,7 @@ try:
     )
     from .pkg.pytest import approx
     from .pkg.superjson import json
-except:
+except:  # pragma: no cover
     from constant2.pkg.pylru import lrudecorator
     from constant2.pkg.sixmini import integer_types, string_types, add_metaclass
     from constant2.pkg.inspect_mate import (
@@ -25,7 +25,7 @@ except:
 
 try:
     del json._dumpers["collections.OrderedDict"]
-except KeyError:
+except KeyError:  # pragma: no cover
     pass
 
 _reserved_attrs = set([
@@ -71,7 +71,7 @@ class Constant(object):
 
     Inherit from this class to define a data container class.
 
-    all nested Constant class automatically inherit from :class:`Constant`. 
+    all nested Constant class automatically inherit from :class:`Constant`.
     """
     __creation_index__ = 0  # Used for sorting
 
@@ -300,7 +300,7 @@ class Constant(object):
             try:
                 if klass.__dict__[attr] == approx(value, e):
                     matched.append(klass)
-            except:
+            except:  # pragma: no cover
                 pass
 
         return matched
@@ -321,7 +321,7 @@ class Constant(object):
             try:
                 if getattr(klass, attr) == approx(value, e):
                     matched.append(klass)
-            except:
+            except:  # pragma: no cover
                 pass
 
         return matched
@@ -346,7 +346,7 @@ class Constant(object):
         """
         if len(data) == 1:
             for key, value in data.items():
-                if "__classname__" not in value:
+                if "__classname__" not in value:  # pragma: no cover
                     raise ValueError
                 name = key
                 bases = (Constant, )
@@ -360,11 +360,11 @@ class Constant(object):
                     else:
                         attrs[k] = v
             return type(name, bases, attrs)
-        else:
+        else:  # pragma: no cover
             raise ValueError
 
     @classmethod
-    def pprint(cls):
+    def pprint(cls):  # pragma: no cover
         """Pretty print it's data.
 
         .. versionadded:: 0.0.2
@@ -372,7 +372,7 @@ class Constant(object):
         pprint(cls.dump())
 
     @classmethod
-    def jprint(cls):
+    def jprint(cls):  # pragma: no cover
         """Json print it's data.
 
         .. versionadded:: 0.0.2
