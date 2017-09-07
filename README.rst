@@ -1,8 +1,8 @@
 .. image:: https://travis-ci.org/MacHu-GWU/constant2-project.svg?branch=master
     :target: https://travis-ci.org/MacHu-GWU/constant2-project?branch=master
 
-.. image:: https://coveralls.io/repos/github/MacHu-GWU/constant2-project/badge.svg?branch=master
-    :target: https://coveralls.io/github/MacHu-GWU/constant2-project?branch=master
+.. image:: https://codecov.io/gh/MacHu-GWU/constant2-project/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/MacHu-GWU/constant2-project
 
 .. image:: https://img.shields.io/pypi/v/constant2.svg
     :target: https://pypi.python.org/pypi/constant2
