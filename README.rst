@@ -26,17 +26,29 @@ If you have lots of constant2 value widely used across your development. A bette
 
 
 Quick Links
------------
-- `GitHub Homepage <https://github.com/MacHu-GWU/constant2-project>`_
-- `Online Documentation <http://www.wbh-doc.com.s3.amazonaws.com/constant2/index.html>`_
-- `PyPI download <https://pypi.python.org/pypi/constant2>`_
-- `Install <install_>`_
-- `Issue submit and feature request <https://github.com/MacHu-GWU/constant2-project/issues>`_
-- `API reference and source code <http://www.wbh-doc.com.s3.amazonaws.com/constant2/py-modindex.html>`_
+------------------------------------------------------------------------------
+
+- .. image:: https://img.shields.io/badge/Link-Document-red.svg
+      :target: http://www.wbh-doc.com.s3.amazonaws.com/constant2/index.html
+
+- .. image:: https://img.shields.io/badge/Link-API_Reference_and_Source_Code-red.svg
+      :target: API reference and source code <http://www.wbh-doc.com.s3.amazonaws.com/constant2/py-modindex.html
+
+- .. image:: https://img.shields.io/badge/Link-Install-red.svg
+      :target: `install`_
+
+- .. image:: https://img.shields.io/badge/Link-GitHub-blue.svg
+      :target: https://github.com/MacHu-GWU/constant2-project
+
+- .. image:: https://img.shields.io/badge/Link-Submit_Issue_and_Feature_Request-blue.svg
+      :target: https://github.com/MacHu-GWU/constant2-project/issues
+
+- .. image:: https://img.shields.io/badge/Link-Download-blue.svg
+      :target: https://pypi.python.org/pypi/constant2#downloads
 
 
 Usage
------
+------------------------------------------------------------------------------
 
 .. code-block:: python
 
@@ -197,7 +209,7 @@ And it provides built-in I/O methods allow you to dump these data in to a dictio
 .. _install:
 
 Install
--------
+------------------------------------------------------------------------------
 
 ``constant2`` is released on PyPI, so all you need is:
 

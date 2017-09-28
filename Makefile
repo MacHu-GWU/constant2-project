@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
-# This Makefile works for:
-# ``MacOS`` + ``pyenv`` + ``pyenv-virtualenv`` tool set
+#
+# This Makefile is a dev-ops tool set.
+# Compatible with:
+#
+# - Windows
+# - MacOS
+# - MacOS + pyenv + pyenv-virtualenv tool set
+# - Linux
 #
 # The file structure should like this:
 #
-# xxx-project
-#     |--- xxx (package source code dir)
+# repo_dir
+#     |--- source_dir (package source code dir)
 #         |--- __init__.py
 #         |--- ...
 #     |--- docs (documents dir)
@@ -15,6 +21,7 @@
 #         |--- make.bat (for windows)
 #         |--- create_doctree.py (a tools automatically build doc tree)
 #     |--- tests (unittest dir)
+#         |--- all.py (run all test from python)
 #     |--- README.rst (readme file)
 #     |--- release-history.rst
 #     |--- setup.py (installation behavior definition)
@@ -23,6 +30,9 @@
 #     |--- MANIFEST.in
 #     |--- tox.ini (tox setting)
 #     |--- .travis.yml (travis-ci setting)
+#     |--- .coveragerc (code coverage text setting)
+#     |--- .gitattributes (git attribute file)
+#     |--- .gitignore (git ignore file)
 #     |--- fixcode.py (autopep8 source code and unittest code)
 #
 # Frequently used make command:
@@ -45,7 +55,7 @@ PACKAGE_NAME="constant2"
 # Python version Used for Development
 PY_VER_MAJOR="2"
 PY_VER_MINOR="7"
-PY_VER_PATCH="13"
+PY_VER_MICRO="10"
 
 #  Other Python Version You Want to Test With
 # (Only useful when you use tox locally)
@@ -64,37 +74,72 @@ USE_PYENV="Y"
 BUCKET_NAME="www.wbh-doc.com"
 
 #--- Derive Other Variable ---
-ifeq ($(USE_PYENV), "Y")
-    BIN_ACTIVATE="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/activate"
-    BIN_PYTHON="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/python"
-    BIN_PIP="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/pip"
-    BIN_PYTEST="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/pytest"
-    BIN_SPHINX_START="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/sphinx-quickstart"
-    BIN_TWINE="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/bin/twine"
+CURRENT_DIR=${shell pwd}
 
+ifeq (${OS}, Windows_NT)
+    DETECTED_OS := Windows
+else
+    DETECTED_OS := $(shell uname -s)
+endif
+
+# Windows
+ifeq (${DETECTED_OS}, Windows)
+    USE_PYENV="N"
+
+    VENV_DIR_REAL="${CURRENT_DIR}/${VENV_NAME}"
+    BIN_DIR="${VENV_DIR_REAL}/Scripts"
+    SITE_PACKAGES="${VENV_DIR_REAL}/Lib/site-packages"
+
+    GLOBAL_PYTHON="/c/Python${PY_VER_MAJOR}${PY_VER_MINOR}/python.exe"
+    OPEN_COMMAND="start"
+endif
+
+
+# MacOS
+ifeq (${DETECTED_OS}, Darwin)
+
+ifeq ($(USE_PYENV), "Y")
     VENV_DIR_REAL="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}"
     VENV_DIR_LINK="${HOME}/.pyenv/versions/${VENV_NAME}"
-
-    SITE_PACKAGES="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/lib/python${PY_VER_MAJOR}.${PY_VER_MINOR}/site-packages"
+    BIN_DIR="${VENV_DIR_REAL}/bin"
+    SITE_PACKAGES="${VENV_DIR_REAL}/lib/python${PY_VER_MAJOR}.${PY_VER_MINOR}/site-packages"
 else
-    BIN_ACTIVATE="./${VENV_NAME}/bin/activate"
-    BIN_PYTHON="./${VENV_NAME}/bin/python"
-    BIN_PIP="./${VENV_NAME}/bin/pip"
-    BIN_PYTEST="./${VENV_NAME}/bin/pytest"
-    BIN_SPHINX_START="./${VENV_NAME}/bin/sphinx-quickstart"
-    BIN_TWINE="./${VENV_NAME}/bin/twine"
-
-    VENV_DIR_REAL="./${VENV_NAME}"
+    VENV_DIR_REAL="${CURRENT_DIR}/${VENV_NAME}"
     VENV_DIR_LINK="./${VENV_NAME}"
-
-    SITE_PACKAGES="${HOME}/.pyenv/versions/${PY_VERSION}/envs/${VENV_NAME}/lib/python${PY_VER_MAJOR}.${PY_VER_MINOR}/site-packages"
+    BIN_DIR="${VENV_DIR_REAL}/bin"
+    SITE_PACKAGES="${VENV_DIR_REAL}/lib/python${PY_VER_MAJOR}.${PY_VER_MINOR}/site-packages"
 endif
+
+    GLOBAL_PYTHON="python${PY_VER_MAJOR}.${PY_VER_MINOR}"
+    OPEN_COMMAND="open"
+endif
+
+
+# Linux
+ifeq (${DETECTED_OS}, Linux)
+    USE_PYENV="N"
+
+    VENV_DIR_REAL="${CURRENT_DIR}/${VENV_NAME}"
+    VENV_DIR_LINK="${CURRENT_DIR}/${VENV_NAME}"
+    BIN_DIR="${VENV_DIR_REAL}/bin"
+    SITE_PACKAGES="${VENV_DIR_REAL}/lib/python${PY_VER_MAJOR}.${PY_VER_MINOR}/site-packages"
+
+    GLOBAL_PYTHON="python${PY_VER_MAJOR}.${PY_VER_MINOR}"
+    OPEN_COMMAND="open"
+endif
+
+
+BIN_ACTIVATE="${BIN_DIR}/activate"
+BIN_PYTHON="${BIN_DIR}/python"
+BIN_PIP="${BIN_DIR}/pip"
+BIN_PYTEST="${BIN_DIR}/pytest"
+BIN_SPHINX_START="${BIN_DIR}/sphinx-quickstart"
+BIN_TWINE="${BIN_DIR}/twine"
 
 S3_PREFIX="s3://${BUCKET_NAME}/${PACKAGE_NAME}"
 DOC_URL="http://${BUCKET_NAME}.s3.amazonaws.com/${PACKAGE_NAME}/index.html"
 
-PY_VERSION="${PY_VER_MAJOR}.${PY_VER_MINOR}.${PY_VER_PATCH}"
-GLOBAL_PYTHON="python${PY_VER_MAJOR}.${PY_VER_MINOR}"
+PY_VERSION="${PY_VER_MAJOR}.${PY_VER_MINOR}.${PY_VER_MICRO}"
 
 
 .PHONY: help
@@ -105,11 +150,11 @@ help: ## Show this help message
 #--- Make Commands ---
 .PHONY: info
 info: ## Show information about python, pip in this environment
-	@echo - venv: ${VENV_DIR_REAL}
-	@echo - python executable: ${BIN_PYTHON}
-	@echo - pip executable: ${BIN_PIP}
-	@echo - document: ${DOC_URL}
-	@echo - site-packages: ${SITE_PACKAGES}
+	@echo - venv: ${VENV_DIR_REAL} "\n"
+	@echo - python executable: ${BIN_PYTHON} "\n"
+	@echo - pip executable: ${BIN_PIP} "\n"
+	@echo - document: ${DOC_URL} "\n"
+	@echo - site-packages: ${SITE_PACKAGES} "\n"
 
 
 #--- Virtualenv ---
@@ -135,8 +180,8 @@ setup_pyenv: brew_install_pyenv ## Do some pre-setup for pyenv and pyenv-virtual
 init_venv: ## Initiate Virtual Environment
 ifeq (${USE_PYENV}, "Y")
 	# Install pyenv
-	brew install pyenv
-	brew install pyenv-virtualenv
+	-brew install pyenv
+	-brew install pyenv-virtualenv
 
 	# Initiate Config File
 	-rm ~/.bash_profile
@@ -173,25 +218,25 @@ uninstall: ## Uninstall This Package
 	-${BIN_PIP} uninstall -y ${PACKAGE_NAME}
 
 
-.POHNY: install
+.PHONY: install
 install: uninstall ## Install This Package via setup.py
 	${BIN_PIP} install .
 
 
-.PHONY: enstall
-enstall: uninstall ## Install This Package in Editable Mode
+.PHONY: dev_install
+dev_install: uninstall ## Install This Package in Editable Mode
 	${BIN_PIP} install --editable .
 
 
 #--- Test ---
 .PHONY: test
-test: enstall ## Run test
+test: dev_install ## Run test
 	${BIN_PIP} install pytest
 	${BIN_PYTEST} tests -s
 
 
 .PHONY: cov
-cov: enstall ## Run Code Coverage test
+cov: dev_install ## Run Code Coverage test
 	${BIN_PIP} install pytest-cov
 	${BIN_PYTEST} tests -s --cov=${PACKAGE_NAME} --cov-report term --cov-report annotate:.coverage.annotate
 
@@ -221,13 +266,28 @@ init_doc: install_doc_deps ## Initialize Sphinx Documentation Library
 
 
 .PHONY: build_doc
-build_doc: install_doc_deps enstall ## Build Documents, force Update
+build_doc: install_doc_deps dev_install ## Build Documents, force Update
 	${BIN_PYTHON} ./docs/create_doctree.py
 	( \
 		source ${BIN_ACTIVATE}; \
 		cd docs; \
 		make html; \
 	)
+
+
+.PHONY: build_doc_again
+build_doc_again: dev_install ## Build Documents, Don't Check Dependencies
+	${BIN_PYTHON} ./docs/create_doctree.py
+	( \
+		source ${BIN_ACTIVATE}; \
+		cd docs; \
+		make html; \
+	)
+
+
+.PHONY: view_doc
+view_doc: ## Open Documents
+	${OPEN_COMMAND} ./docs/build/html/index.html
 
 
 .PHONY: deploy_doc
@@ -239,11 +299,6 @@ deploy_doc: ##
 .PHONY: clean_doc
 clean_doc: ## Clean Existing Documents
 	rm -r ./docs/build
-
-
-.PHONY: view_doc
-view_doc: ## Open Documents
-	open ./docs/build/html/index.html
 
 
 .PHONY: reformat
