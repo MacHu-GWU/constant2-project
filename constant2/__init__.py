@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from ._constant2 import Constant
 
-# try:
-#     pass
-# except:  # pragma: no cover
-#     pass
+try:
+    from ._constant2 import Constant
+except:  # pragma: no cover
+    pass
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 __short_description__ = "provide extensive way of managing your constant variable."
 __license__ = "MIT"
 __author__ = "Sanhe Hu"

@@ -50,7 +50,7 @@ Quick Links
 Usage
 ------------------------------------------------------------------------------
 
-**Version Changed 0.0.9: All nested class now has to inherit from ``Constant`` or its subclass**, example:
+**Version Changed 0.0.9: All nested class now has to inherit from** ``Constant`` **or its subclass**:
 
 .. code-block:: python
 
@@ -72,6 +72,7 @@ Usage
         class Weapon(Item):
             id = 1
 
+Usage:
 
 .. code-block:: python
 
