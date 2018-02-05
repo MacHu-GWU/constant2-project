@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from ._constant2 import Constant
 
-try:
-    from ._constant2 import Constant
-except:  # pragma: no cover
-    pass
+# try:
+#     pass
+# except:  # pragma: no cover
+#     pass
 
 __version__ = "0.0.8"
 __short_description__ = "provide extensive way of managing your constant variable."

@@ -6,6 +6,7 @@ import inspect
 from copy import deepcopy
 from pprint import pprint
 from collections import OrderedDict
+
 try:
     from .pkg.pylru import lrudecorator
     from .pkg.sixmini import integer_types, string_types, add_metaclass
@@ -28,45 +29,8 @@ try:
 except KeyError:  # pragma: no cover
     pass
 
-_reserved_attrs = set([
-    "Items", "Keys", "Values",
-    "items", "keys", "values",
-    "ToDict", "to_dict",
-    "Subclasses", "subclasses",
-    "GetFirst", "get_first",
-    "GetAll", "get_all",
-    "dump", "load", "pprint", "jprint",
-])
 
-
-class Meta(type):
-    """Meta class for :class:`Constant`.
-    """
-    def __new__(cls, name, bases, attrs):
-        for attr, value in attrs.items():
-            # nested class has to inherit from type or object
-            # ``class MyClass:`` or ``class MyClass(object):``
-            if inspect.isclass(value):
-                # If it's inherit from type (in PY3) or object (in PY2)
-                # inherit from Constant instead
-                if isinstance(value, (type, object)):
-                    kls = type(
-                        value.__name__, (Constant,), value.__dict__.copy())
-                    attrs[attr] = kls
-
-        klass = super(Meta, cls).__new__(cls, name, bases, attrs)
-        for attr in attrs:
-            # Make sure reserved attributes are not been override
-            if attr in _reserved_attrs:
-                if not (is_class_method(klass, attr) or is_regular_method(klass, attr)):
-                    raise AttributeError(
-                        "%r is not a valid attribute name" % attr)
-
-        return klass
-
-
-@add_metaclass(Meta)
-class Constant(object):
+class _Constant(object):
     """Generic Constantant.
 
     Inherit from this class to define a data container class.
@@ -92,10 +56,12 @@ class Constant(object):
         Constant.__creation_index__ += 1
 
     def __repr__(self):
-        items_str = ", ".join(["%s=%r" % (attr, value)
-                               for attr, value in self.items()])
-        nested_str = ", ".join(
-            ["%s=%r" % (attr, subclass) for attr, subclass in self.subclasses()])
+        items_str = ", ".join([
+            "%s=%r" % (attr, value) for attr, value in self.items()
+        ])
+        nested_str = ", ".join([
+            "%s=%r" % (attr, subclass) for attr, subclass in self.subclasses()
+        ])
 
         l = list()
         if items_str:
@@ -113,15 +79,18 @@ class Constant(object):
 
         ::
 
-            class MyClass(Constant):
-                a = 1 # non-class attributre
-                b = 2 # non-class attributre
+            >>> class MyClass(Constant):
+            ...     a = 1 # non-class attributre
+            ...     b = 2 # non-class attributre
+            ...
+            ...     class C(Constant):
+            ...         pass
+            ...
+            ...     class D(Constant):
+            ...         pass
 
-                class C:
-                    pass
-
-                class D:
-                    pass
+            >>> MyClass.Items()
+            [("a", 1), ("b", 2)]
 
         .. versionadded:: 0.0.5
         """
@@ -131,10 +100,26 @@ class Constant(object):
             if not inspect.isclass(value):
                 l.append((attr, value))
 
-        return l
+        return list(sorted(l, key=lambda x: x[0]))
 
     def items(self):
         """non-class attributes ordered by alphabetical order.
+
+        ::
+
+            >>> class MyClass(Constant):
+            ...     a = 1 # non-class attributre
+            ...     b = 2 # non-class attributre
+            ...
+            ...     class C(Constant):
+            ...         pass
+            ...
+            ...     class D(Constant):
+            ...         pass
+
+            >>> my_class = MyClass()
+            >>> my_class.items()
+            [("a", 1), ("b", 2)]
 
         .. versionchanged:: 0.0.5
         """
@@ -151,7 +136,7 @@ class Constant(object):
             if not isinstance(value, Constant):
                 l.append((attr, value))
 
-        return l
+        return list(sorted(l, key=lambda x: x[0]))
 
     def __eq__(self, other):
         return self.items() == other.items()
@@ -209,6 +194,21 @@ class Constant(object):
         :param reverse: if True, return in descend order.
         :returns: [(attr, value),...] pairs.
 
+        ::
+
+        >>> class MyClass(Constant):
+        ...     a = 1 # non-class attributre
+        ...     b = 2 # non-class attributre
+        ...
+        ...     class C(Constant):
+        ...         pass
+        ...
+        ...     class D(Constant):
+        ...         pass
+
+        >>> MyClass.Subclasses()
+        [("C", MyClass.C), ("D", MyClass.D)]
+
         .. versionadded:: 0.0.3
         """
         l = list()
@@ -233,6 +233,22 @@ class Constant(object):
         :param sort_by: the attribute name used for sorting.
         :param reverse: if True, return in descend order.
         :returns: [(attr, value),...] pairs.
+
+        ::
+
+            >>> class MyClass(Constant):
+            ...     a = 1 # non-class attributre
+            ...     b = 2 # non-class attributre
+            ...
+            ...     class C(Constant):
+            ...         pass
+            ...
+            ...     class D(Constant):
+            ...         pass
+
+            >>> my_class = MyClass()
+            >>> my_class.subclasses()
+            [("C", my_class.C), ("D", my_class.D)]
 
         .. versionadded:: 0.0.4
         """
@@ -349,7 +365,7 @@ class Constant(object):
                 if "__classname__" not in value:  # pragma: no cover
                     raise ValueError
                 name = key
-                bases = (Constant, )
+                bases = (Constant,)
                 attrs = dict()
                 for k, v in value.items():
                     if isinstance(v, dict):
@@ -380,6 +396,43 @@ class Constant(object):
         print(json.dumps(cls.dump(), pretty=4))
 
 
+_reserved_attrs = set([
+    "Items", "Keys", "Values",
+    "items", "keys", "values",
+    "ToDict", "to_dict",
+    "Subclasses", "subclasses",
+    "GetFirst", "get_first",
+    "GetAll", "get_all",
+    "dump", "load", "pprint", "jprint",
+])
+
+
+class Meta(type):
+    """Meta class for :class:`Constant`.
+    """
+
+    def __new__(cls, name, bases, attrs):
+        klass = super(Meta, cls).__new__(cls, name, bases, attrs)
+        for attr in attrs:
+            # Make sure reserved attributes are not been override
+            if attr in _reserved_attrs:
+                if not (is_class_method(klass, attr)
+                        or is_regular_method(klass, attr)):
+                    raise AttributeError(
+                        "%r is not a valid attribute name" % attr
+                    )
+                else:
+                    if not getattr(klass, attr) == getattr(_Constant, attr):
+                        msg = "%s is a reserved attribute / method name" % attr
+                        raise AttributeError(msg)
+        return klass
+
+
+@add_metaclass(Meta)
+class Constant(_Constant):
+    pass
+
+
 def is_same_dict(d1, d2):
     """Test two dictionary is equal on values. (ignore order)
     """
@@ -397,9 +450,7 @@ def is_same_dict(d1, d2):
 
 
 if __name__ == "__main__":
-
     class Food(Constant):
-
         class Fruit:
             id = 1
             name = "fruit"

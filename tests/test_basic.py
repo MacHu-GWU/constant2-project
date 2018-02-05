@@ -2,10 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-Unittest
+Test:
+
+- MyClass.Items()
+- MyClass.Keys()
+- MyClass.Values()
+- MyClass.Subclasses()
+- my_class.items()
+- my_class.keys()
+- my_class.values()
+- my_class.subclass()
 """
 
-from __future__ import print_function
 import time
 import pytest
 from constant2 import Constant
@@ -13,44 +21,43 @@ from constant2._constant2 import is_same_dict
 
 
 class Food(Constant):
-
-    class Fruit:
+    class Fruit(Constant):
         id = 1
         name = "fruit"
 
-        class Apple:
+        class Apple(Constant):
             id = 1
             name = "apple"
 
-            class RedApple:
+            class RedApple(Constant):
                 id = 1
                 name = "red apple"
 
-            class GreenApple:
+            class GreenApple(Constant):
                 id = 2
                 name = "green apple"
 
-        class Banana:
+        class Banana(Constant):
             id = 2
             name = "banana"
 
-            class YellowBanana:
+            class YellowBanana(Constant):
                 id = 1
                 name = "yellow banana"
 
-            class GreenBanana:
+            class GreenBanana(Constant):
                 id = 2
                 name = "green banana"
 
-    class Meat:
+    class Meat(Constant):
         id = 2
         name = "meat"
 
-        class Pork:
+        class Pork(Constant):
             id = 1
             name = "pork"
 
-        class Beef:
+        class Beef(Constant):
             id = 2
             name = "beef"
 
@@ -58,8 +65,7 @@ class Food(Constant):
 food = Food()
 
 
-class TestFood:
-
+class TestFood(object):
     def test_Items(self):
         assert Food.Items() == []
         assert Food.Fruit.Items() == [("id", 1), ("name", "fruit")]
@@ -152,123 +158,28 @@ class TestFood:
         for i in range(1000):
             Food.GetFirst("id", 2)
         elapsed = time.clock() - st
-        print("with lfu_cache elapsed %.6f second." % elapsed)
+        # print("with lfu_cache elapsed %.6f second." % elapsed)
 
     def test_get_first_performance(self):
         st = time.clock()
         for i in range(1000):
             food.get_first("id", 2)
         elapsed = time.clock() - st
-        print("without lfu_cache elapsed %.6f second." % elapsed)
+        # print("without lfu_cache elapsed %.6f second." % elapsed)
 
     def test_ToDict(self):
-        d = Food.ToDict()
+        assert Food.ToDict() == {}
+        assert Food.Fruit.ToDict() == {"id": 1, "name": "fruit"}
 
-    def test_to_dot(self):
-        d = food.to_dict()
+    def test_to_dict(self):
+        assert food.to_dict() == {}
+        assert food.Fruit.to_dict() == {"id": 1, "name": "fruit"}
 
     def test_dump_load(self):
         data = Food.dump()
         Food1 = Constant.load(data)
         data1 = Food1.dump()
         is_same_dict(data, data1)
-
-
-class Item(Constant):
-
-    class Weapon:
-        id = 1
-        name = "weapon"
-        weight = 10
-
-    class Armor:
-        id = 2
-        name = "armor"
-        weight = 10
-
-
-item = Item()
-
-
-class TestItem:
-    """
-
-    **中文文档**
-
-    测试GetAll的排序功能是否有效。
-    """
-
-    def test_GetAll(self):
-        assert Item.GetAll("weight", 10, sort_by="name") == [
-            Item.Armor, Item.Weapon,
-        ]
-
-    def test_get_all(self):
-        assert item.get_all("weight", 10, sort_by="name") == [
-            item.Armor, item.Weapon,
-        ]
-
-
-class Config(Constant):
-    data = dict(a=1)
-
-    class Setting:
-        data = dict(a=1)
-
-
-def test_instance_deepcopy():
-    """Although, if the attribute of the class is mutable object.
-
-    Edit it's value on one instance will not affect other instance and the
-    original class.
-    """
-    config1 = Config()
-    config1.data["a"] = 2
-    config1.Setting.data["a"] = 2
-
-    config2 = Config()
-    assert config2.data["a"] == 1
-    assert config2.Setting.data["a"] == 1
-
-
-class User:
-    id = None
-    name = None
-
-
-class AddressBook(Constant):
-    alice = User
-    bob = User
-
-
-def test_different_attr_same_value():
-    data = AddressBook.dump()
-    data1 = {
-        "AddressBook": {
-            "__classname__": "AddressBook",
-            "alice": {
-                "User": {
-                    "__classname__": "User",
-                    "id": None,
-                    "name": None,
-                }
-            },
-            "bob": {
-                "User": {
-                    "__classname__": "User",
-                    "id": None,
-                    "name": None,
-                }
-            }
-        }
-    }
-    is_same_dict(data, data1)
-
-    ab = AddressBook()
-
-    s = str(ab)
-    assert "alice=User(id=None, name=None)" in s
-    assert "bob=User(id=None, name=None)" in s
 
 
 if __name__ == "__main__":

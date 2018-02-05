@@ -29,10 +29,10 @@ Quick Links
 ------------------------------------------------------------------------------
 
 - .. image:: https://img.shields.io/badge/Link-Document-red.svg
-      :target: http://www.wbh-doc.com.s3.amazonaws.com/constant2/index.html
+      :target: https://constant2.readthedocs.io/index.html
 
 - .. image:: https://img.shields.io/badge/Link-API_Reference_and_Source_Code-red.svg
-      :target: API reference and source code <http://www.wbh-doc.com.s3.amazonaws.com/constant2/py-modindex.html
+      :target: https://constant2.readthedocs.io/py-modindex.html
 
 - .. image:: https://img.shields.io/badge/Link-Install-red.svg
       :target: `install`_
@@ -215,10 +215,10 @@ Install
 
 .. code-block:: console
 
-	$ pip install constant2
+    $ pip install constant2
 
 To upgrade to latest version:
 
 .. code-block:: console
 
-	$ pip install --upgrade constant2
+    $ pip install --upgrade constant2
