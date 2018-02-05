@@ -2,7 +2,7 @@
 constant2_venv/
 constant2.egg-info/
 constant2-*/
-index.rst
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
