@@ -50,49 +50,72 @@ Quick Links
 Usage
 ------------------------------------------------------------------------------
 
+**Version Changed 0.0.9: All nested class now has to inherit from ``Constant`` or its subclass**, example:
+
+.. code-block:: python
+
+    # WRONG!
+    class ItemType(Constant):
+        class Weapon:
+            id = 1
+
+    # CORRECT
+    class ItemType(Constant):
+        class Weapon(Constant):
+            id = 1
+
+    # or
+    class Item(Constant):
+        pass
+
+    class ItemType(Constant):
+        class Weapon(Item):
+            id = 1
+
+
 .. code-block:: python
 
     from constant2 import Constant
 
     class Food(Constant):
 
-        class Fruit:
+        class Fruit(Constant):
             id = 1
             name = "fruit"
 
-            class Apple:
+            class Apple(Constant):
                 id = 1
                 name = "apple"
 
-                class RedApple:
+                class RedApple(Constant):
                     id = 1
                     name = "red apple"
 
-                class GreenApple:
+                class GreenApple(Constant):
                     id = 2
                     name = "green apple"
 
-            class Banana:
+            class Banana(Constant):
                 id = 2
                 name = "banana"
 
-                class YellowBanana:
+                class YellowBanana(Constant):
                     id = 1
                     name = "yellow banana"
 
-                class GreenBanana:
+                class GreenBanana(Constant):
                     id = 2
                     name = "green banana"
 
-        class Meat:
+        class Meat(Constant):
             id = 2
             name = "meat"
 
-            class Pork:
+            class Pork(Constant):
                 id = 1
                 name = "pork"
 
-            class Beef:
+            class Beef(Constant):
                 id = 2
                 name = "beef"
 
