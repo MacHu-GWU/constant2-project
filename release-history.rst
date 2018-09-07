@@ -1,7 +1,7 @@
 Release and Version History
 ===========================
 
-0.0.10 (TODO)
+0.0.11 (TODO)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Features and Improvements**
 
@@ -10,6 +10,14 @@ Release and Version History
 **Bugfixes**
 
 **Miscellaneous**
+
+
+0.0.10 (2018-09-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Minor Improvements**
+
+- upgrade inclueded ``superjson`` from 0.0.8 to 0.0.10
+- upgrade inclueded ``inspect_mate`` from 0.0.1 to 0.0.2
 
 
 0.0.9 (2018-02-05)

@@ -92,5 +92,3 @@ def get_all_methods(klass_or_instance):
 
 if __name__ == "__main__":
     from inspect_mate.tests import Klass, instance
-
-    print(get_all_attributes(instance))

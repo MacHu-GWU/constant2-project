@@ -75,7 +75,7 @@ VENV_NAME="${PACKAGE_NAME}_venv"
 USE_PYENV="Y"
 
 # S3 Bucket Name
-BUCKET_NAME="www.wbh-doc.com"
+BUCKET_NAME="www.example.com"
 
 #--- Derive Other Variable ---
 CURRENT_DIR=${shell pwd}
