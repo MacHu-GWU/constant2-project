@@ -6,7 +6,7 @@ try:
 except:  # pragma: no cover
     pass
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
 __short_description__ = "provide extensive way of managing your constant variable."
 __license__ = "MIT"
 __author__ = "Sanhe Hu"

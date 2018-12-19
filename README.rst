@@ -20,9 +20,11 @@
 Welcome to ``constant2`` Documentation
 ==============================================================================
 
-If you have lots of constant2 value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability.
+If you have lots of constant2 value widely used across your development. A better way is to define ``Constantant Variable`` rather than using the raw value. This can improve the readability and accessibility.
 
 ``constant2`` is a library provide extensive way of managing your constant2 variable.
+
+**Another powerful feature** is, ``constant2`` allows developer defines normalized entity relationship and is data in ``class`` style, which giving awesome accessibility to every single row, and every single column, free developer from memorizing things.
 
 
 Quick Links

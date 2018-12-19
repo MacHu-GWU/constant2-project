@@ -1,7 +1,7 @@
 Release and Version History
 ===========================
 
-0.0.13 (TODO)
+0.0.14 (TODO)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Features and Improvements**
 
@@ -10,6 +10,18 @@ Release and Version History
 **Bugfixes**
 
 **Miscellaneous**
+
+
+0.0.13 (2018-12-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Features and Improvements**
+
+- add ``Constant2.BackAssign`` method, define entity mapping in a more clean way.
+- add ``Constant2.ToIds``, ``Constant2.to_ids``, ``Constant2.ToIds``, ``Constant2.ToIds``, ``Constant2.ToClasses``, ``Constant2.to_instances``, ``Constant2.SubIds``, ``Constant2.sub_ids``.
+
+**Minor Improvements**
+
+- from 98% to 99% test converage.
 
 
 0.0.12 (2018-09-06)
@@ -59,7 +71,7 @@ Release and Version History
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Features and Improvements**
 - Now attribute or sub classes could have mutable attributes. Modify one on this instance will not affect other instance.
-- Seperate the methods into two group of API (uppercase for class, lowercase for instance).
+- Separate the methods into two group of API (uppercase for class, lowercase for instance).
 
 **Bugfixes**
 - Fixed a import problem. Now it doesn't require to install any third party packages.

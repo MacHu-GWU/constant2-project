@@ -167,6 +167,24 @@ class TestFood(object):
         elapsed = time.clock() - st
         # print("without lfu_cache elapsed %.6f second." % elapsed)
 
+    def test_ToIds(self):
+        assert Food.ToIds([Food.Fruit, Food.Meat]) == [1, 2]
+
+    def test_to_ids(self):
+        assert food.to_ids([food.Fruit, food.Meat]) == [1, 2]
+
+    def test_ToClasses(self):
+        assert Food.ToClasses([1, 2]) == [Food.Fruit, Food.Meat]
+
+    def test_to_instances(self):
+        assert food.to_instances([1, 2]) == [food.Fruit, food.Meat]
+
+    def test_SubIds(self):
+        assert Food.SubIds() == [1, 2]
+
+    def test_sub_ids(self):
+        assert food.sub_ids() == [1, 2]
+
     def test_ToDict(self):
         assert Food.ToDict() == {}
         assert Food.Fruit.ToDict() == {"id": 1, "name": "fruit"}

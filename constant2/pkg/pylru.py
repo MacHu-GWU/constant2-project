@@ -31,6 +31,9 @@
 # lookup of values by key.
 
 # Class for the node objects.
+import functools
+
+
 class _dlnode(object):
     def __init__(self):
         self.empty = True
@@ -516,9 +519,6 @@ def lruwrap(store, size, writeback=False):
         return WriteBackCacheManager(store, size)
     else:
         return WriteThroughCacheManager(store, size)
-
-
-import functools
 
 
 class lrudecorator(object):

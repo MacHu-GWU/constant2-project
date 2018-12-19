@@ -12,6 +12,10 @@ def test_reserved_method_error():
             def keys(self):
                 return iter(self)
 
+    with raises(AttributeError):
+        class Dictionary(Constant):
+            keys = "a"
+
 
 if __name__ == "__main__":
     import os
