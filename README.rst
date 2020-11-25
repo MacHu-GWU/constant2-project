@@ -1,8 +1,9 @@
+
 .. image:: https://travis-ci.org/MacHu-GWU/constant2-project.svg?branch=master
     :target: https://travis-ci.org/MacHu-GWU/constant2-project?branch=master
 
 .. image:: https://codecov.io/gh/MacHu-GWU/constant2-project/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/MacHu-GWU/constant2-project
+    :target: https://codecov.io/gh/MacHu-GWU/constant2-project
 
 .. image:: https://img.shields.io/pypi/v/constant2.svg
     :target: https://pypi.python.org/pypi/constant2
@@ -13,8 +14,35 @@
 .. image:: https://img.shields.io/pypi/pyversions/constant2.svg
     :target: https://pypi.python.org/pypi/constant2
 
-.. image:: https://img.shields.io/badge/Star_Me_on_GitHub!--None.svg?style=social
+.. image:: https://img.shields.io/badge/STAR_Me_on_GitHub!--None.svg?style=social
     :target: https://github.com/MacHu-GWU/constant2-project
+
+------
+
+
+.. image:: https://img.shields.io/badge/Link-Document-blue.svg
+    :target: http://constant2.my-docs.com/index.html
+
+.. image:: https://img.shields.io/badge/Link-API-blue.svg
+    :target: http://constant2.my-docs.com/py-modindex.html
+
+.. image:: https://img.shields.io/badge/Link-Source_Code-blue.svg
+    :target: http://constant2.my-docs.com/py-modindex.html
+
+.. image:: https://img.shields.io/badge/Link-Install-blue.svg
+    :target: `install`_
+
+.. image:: https://img.shields.io/badge/Link-GitHub-blue.svg
+    :target: https://github.com/MacHu-GWU/constant2-project
+
+.. image:: https://img.shields.io/badge/Link-Submit_Issue-blue.svg
+    :target: https://github.com/MacHu-GWU/constant2-project/issues
+
+.. image:: https://img.shields.io/badge/Link-Request_Feature-blue.svg
+    :target: https://github.com/MacHu-GWU/constant2-project/issues
+
+.. image:: https://img.shields.io/badge/Link-Download-blue.svg
+    :target: https://pypi.org/pypi/constant2#files
 
 
 Welcome to ``constant2`` Documentation
@@ -25,28 +53,6 @@ If you have lots of constant2 value widely used across your development. A bette
 ``constant2`` is a library provide extensive way of managing your constant2 variable.
 
 **Another powerful feature** is, ``constant2`` allows developer defines normalized entity relationship and is data in ``class`` style, which giving awesome accessibility to every single row, and every single column, free developer from memorizing things.
-
-
-Quick Links
-------------------------------------------------------------------------------
-
-- .. image:: https://img.shields.io/badge/Link-Document-red.svg
-      :target: https://constant2.readthedocs.io/index.html
-
-- .. image:: https://img.shields.io/badge/Link-API_Reference_and_Source_Code-red.svg
-      :target: https://constant2.readthedocs.io/py-modindex.html
-
-- .. image:: https://img.shields.io/badge/Link-Install-red.svg
-      :target: `install`_
-
-- .. image:: https://img.shields.io/badge/Link-GitHub-blue.svg
-      :target: https://github.com/MacHu-GWU/constant2-project
-
-- .. image:: https://img.shields.io/badge/Link-Submit_Issue_and_Feature_Request-blue.svg
-      :target: https://github.com/MacHu-GWU/constant2-project/issues
-
-- .. image:: https://img.shields.io/badge/Link-Download-blue.svg
-      :target: https://pypi.python.org/pypi/constant2#downloads
 
 
 Usage
