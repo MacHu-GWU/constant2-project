@@ -1,0 +1,35 @@
+
+# comprehensive github action yml reference: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
+
+---
+name: CI
+
+on:
+  push: # any push event to master will trigger this
+    branches: ["master"]
+  pull_request: # any pull request to master will trigger this
+    branches: ["master"]
+  workflow_dispatch: # allows you to manually trigger run
+
+jobs:
+  tests:
+    name: "Python ${{ matrix.python-version }}"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        python-version: ["3.6"]
+
+    steps:
+      - uses: "actions/checkout@v2" # https://github.com/marketplace/actions/checkout
+      - uses: "actions/setup-python@v2" # https://github.com/marketplace/actions/setup-python
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: "Install dependencies"
+        run: |
+          set -xe
+          python -VV
+          python -m site
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions
+#      - name: "Run tox targets for ${{ matrix.python-version }}"
+#        run: "python -m tox"
