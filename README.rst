@@ -1,6 +1,7 @@
 
-.. image:: https://travis-ci.org/MacHu-GWU/constant2-project.svg?branch=master
-    :target: https://travis-ci.org/MacHu-GWU/constant2-project?branch=master
+
+.. image:: https://github.com/MacHu-GWU/constant2-project/workflows/CI/badge.svg
+    :target: https://github.com/MacHu-GWU/constant2-project/actions?query=workflow:CI
 
 .. image:: https://codecov.io/gh/MacHu-GWU/constant2-project/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/MacHu-GWU/constant2-project
